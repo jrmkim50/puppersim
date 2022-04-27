@@ -11,6 +11,7 @@ import os
 import numpy as np
 import gym
 from packaging import version
+import math
 
 import arspb.logz as logz
 from puppersim.reacher import reacher_kinematics
@@ -101,10 +102,26 @@ class Worker(object):
       # targets.append(np.array([-0.07, 0.07, 0.07]))
       # targets.append(np.array([-0.07, -0.07, 0.07]))
       
+      #Modification
+      
+      Z_COORD = 0.16603879
+      RADIUS = 0.0693055088
+      
+      target_circle = []
+      n_points = 100
+      
+      for i in range(n_points):
+        x = RADIUS * math.cos((2*math.pi/n_points)*i)
+        y = RADIUS * math.sin((2*math.pi/n_points)*i)
+        z = Z_COORD
+        target_circle.append(np.array([x, y, z]))
+      
+      
       # Random targets
       np.random.seed(0)
-      targets = reacher_kinematics.random_reachable_points(100)
-
+      #targets = reacher_kinematics.random_reachable_points(100)
+      targets = target_circle
+      
       for i in range(number_rollouts):
         target = targets[i%len(targets)] if targets is not None else None
         (total_reward, steps) = self.rollout(shift=shift, rollout_length=rollout_length, target=target)

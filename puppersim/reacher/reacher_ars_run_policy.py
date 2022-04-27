@@ -19,6 +19,7 @@ import time
 import arspb.trained_policies as tp
 import os
 import random
+import math
 
 #temp hack to create an envs_v2 pupper env
 
@@ -38,6 +39,15 @@ def create_reacher_env(args):
                                render_meshes=args.render_meshes)
 
   return env
+
+
+#ADDED
+
+def alternate_target(state):
+  if (state == 1):
+    return [0, 0.1, 0.15]
+  else:
+    return [0.1, 0, 0.15]
 
 
 def main(argv):
@@ -123,6 +133,8 @@ def main(argv):
       'MotorAngle': [],
       'action': []
   }
+  
+  state = 0
   try: #for i in range(args.num_rollouts):
     while(True):
       # Hard coded targets
@@ -138,6 +150,14 @@ def main(argv):
 
       ## 8 possible targets gets -5
       target = random.choice(possible_targets)
+      
+      # target = alternate_target(state)
+      # if state == 0:
+      #   state = 1
+      # else:
+      #   state = 0
+        
+        
       obs = env.reset(target)
       done = False
       totalr = 0.
@@ -145,7 +165,25 @@ def main(argv):
       start_time_wall = time.time()
       env_start_time_wall = time.time()
       last_spammy_log = 0.0
-      while not done or args.run_on_robot:
+      
+      Z_COORD = 0.16603879
+      RADIUS = 0.0693055088
+      
+      target_circle = []
+      n_points = 200
+      
+      for i in range(n_points):
+        x = RADIUS * math.cos((2*math.pi/n_points)*i)
+        y = RADIUS * math.sin((2*math.pi/n_points)*i)
+        z = Z_COORD
+        target_circle.append(np.array([x, y, z]))
+      
+      possible_targets = target_circle
+      
+      while not done or args.run_on_robot:      
+        target = possible_targets[steps % len(possible_targets)]
+        env.setTarget(target)
+        
         if args.realtime or args.run_on_robot:  # always run at realtime with real robot
           # Sync to real time.
           # wall_elapsed = time.time() - env_start_time_wall

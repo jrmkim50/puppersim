@@ -16,6 +16,9 @@ KP = 6.0
 KD = 1.0
 MAX_CURRENT = 4.0
 
+#ADDED
+state = 0
+
 
 class ReacherEnv(gym.Env):
 
@@ -117,6 +120,8 @@ class ReacherEnv(gym.Env):
 
   def setTarget(self, target):
     self.target = target
+    self._bullet_client.resetBasePositionAndOrientation(self._target_visualization, self.target, [0,0,0,1])
+  
 
   def calculateInverseKinematics(self, target_pos):
     # compute end effector pos in cartesian cords given angles
@@ -185,6 +190,13 @@ class ReacherEnv(gym.Env):
       ob = self._get_obs()
       self._bullet_client.stepSimulation()
 
+    #self.target = func(steps
+                       )
+    # number_rollouts=1
+    # default rollout_length=50
+    # maybe increase 1/240 (seconds)
+    
+    
     reward_dist = -np.linalg.norm(
         self._get_vector_from_end_effector_to_goal())**2
     reward_ctrl = 0
@@ -193,6 +205,7 @@ class ReacherEnv(gym.Env):
     done = False
 
     return ob, reward, done, {}
+
 
   def _get_end_effector_link_id(self):
     for joint_id in range(self.num_joints):
