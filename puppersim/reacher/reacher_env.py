@@ -131,7 +131,7 @@ class ReacherEnv(gym.Env):
 
   def setTarget(self, target):
     self.target = target
-    self._bullet_client.resetBasePositionAndOrientation(self._target_visualization, self.target, [0,0,0,1])
+    # self._bullet_client.resetBasePositionAndOrientation(self._target_visualization, self.target, [0,0,0,1])
   
 
   def calculateInverseKinematics(self, target_pos):
