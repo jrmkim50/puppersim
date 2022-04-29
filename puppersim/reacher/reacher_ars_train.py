@@ -90,7 +90,7 @@ class Worker(object):
         #assert self.policy_params['type'] == 'linear'
         return self.policy.get_weights_plus_stats()
     
-    def multi_rollout(self, targets=None, rollout_length=None, shift=0.0, number_rollouts=100):
+    def multi_rollout(self, targets=None, rollout_length=None, shift=0.0, number_rollouts=1):
       average_reward = 0.0
       total_steps = 0
 
