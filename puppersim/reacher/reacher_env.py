@@ -16,9 +16,6 @@ KP = 6.0
 KD = 1.0
 MAX_CURRENT = 4.0
 
-#ADDED
-state = 0
-
 
 class ReacherEnv(gym.Env):
 
@@ -71,6 +68,20 @@ class ReacherEnv(gym.Env):
     else:
       self.urdf_filename = "pupper_arm_no_mesh.urdf"
 
+    # modifications
+    self.steps = 0
+    Z_COORD = 0.16603879
+    RADIUS = 0.0693055088
+    
+    self.target_circle = []
+    n_points = 100
+    
+    for i in range(n_points):
+      x = RADIUS * math.cos((2*math.pi/n_points)*i)
+      y = RADIUS * math.sin((2*math.pi/n_points)*i)
+      z = Z_COORD
+      self.target_circle.append(np.array([x, y, z]))
+
   def reset(self, target=None):
     self.target = target if target is not None else np.array([0.00, 0.00, 0.1])
 
@@ -120,7 +131,7 @@ class ReacherEnv(gym.Env):
 
   def setTarget(self, target):
     self.target = target
-    self._bullet_client.resetBasePositionAndOrientation(self._target_visualization, self.target, [0,0,0,1])
+    #self._bullet_client.resetBasePositionAndOrientation(self._target_visualization, self.target, [0,0,0,1])
   
 
   def calculateInverseKinematics(self, target_pos):
@@ -189,11 +200,11 @@ class ReacherEnv(gym.Env):
       self._apply_actions(actions)
       ob = self._get_obs()
       self._bullet_client.stepSimulation()
-
-    #self.target = func(steps
-                       )
+    
+    # modifications
+    self.steps += 1
+    self.target = self.target_circle[self.steps % len(self.target_circle)]
     # number_rollouts=1
-    # default rollout_length=50
     # maybe increase 1/240 (seconds)
     
     
