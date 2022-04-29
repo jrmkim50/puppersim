@@ -104,7 +104,8 @@ class Worker(object):
       
       # Random targets
       np.random.seed(0)
-      targets = reacher_kinematics.random_reachable_points(100)
+      # targets = reacher_kinematics.random_reachable_points(100)
+      targets = None
       
       for i in range(number_rollouts):
         target = targets[i%len(targets)] if targets is not None else None
