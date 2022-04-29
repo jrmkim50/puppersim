@@ -170,7 +170,7 @@ def main(argv):
       RADIUS = 0.0693055088
       
       target_circle = []
-      n_points = 200
+      n_points = 100
       
       for i in range(n_points):
         x = RADIUS * math.cos((2*math.pi/n_points)*i)

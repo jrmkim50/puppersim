@@ -27,8 +27,8 @@ class ReacherEnv(gym.Env):
       leg_index=3,
   ):
     self.action_space = gym.spaces.Box(
-        np.array([-2 * math.pi, -1.5 * math.pi, -1.0 * math.pi]),
-        np.array([2 * math.pi, 1.5 * math.pi, 1.0 * math.pi]),
+        np.array([-3 * math.pi, -1.5 * math.pi, -1.0 * math.pi]),
+        np.array([3 * math.pi, 1.5 * math.pi, 1.0 * math.pi]),
         dtype=np.float32)
     self.observation_space = gym.spaces.Box(
         # np.array([-1, -1, -1, -1, -1, -1, 0.05, 0.05, 0.05, -0.3, -0.3, -0.3]),
@@ -131,7 +131,7 @@ class ReacherEnv(gym.Env):
 
   def setTarget(self, target):
     self.target = target
-    # self._bullet_client.resetBasePositionAndOrientation(self._target_visualization, self.target, [0,0,0,1])
+    self._bullet_client.resetBasePositionAndOrientation(self._target_visualization, self.target, [0,0,0,1])
   
 
   def calculateInverseKinematics(self, target_pos):
